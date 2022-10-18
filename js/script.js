@@ -11,6 +11,17 @@ Aggiungere una select accanto al bottone di generazione, che fornisca una scelta
 - con difficoltà 3 => 49 caselle, con un numero compreso tra 1 e 49, divise in 7 caselle per 7 righe;
 */
 
+/*
+Il computer deve generare 16 numeri casuali nello stesso range della difficoltà prescelta: le bombe.
+I numeri nella lista delle bombe non possono essere duplicati.
+In seguito l'utente clicca su una cella: se il numero è presente nella lista dei numeri generati - abbiamo calpestato una bomba - la cella si colora di rosso e la partita termina, altrimenti la cella cliccata si colora di azzurro e l'utente può continuare a cliccare sulle altre celle.
+La partita termina quando il giocatore clicca su una bomba o raggiunge il numero massimo possibile di numeri consentiti.
+Al termine della partita il software deve comunicare il punteggio, cioè il numero di volte che l’utente ha cliccato su una cella che non era una bomba.
+
+BONUS:
+1- quando si clicca su una bomba e finisce la partita, evitare che si possa cliccare su altre celle
+2- quando si clicca su una bomba e finisce la partita, il software scopre tutte le bombe nascoste
+*/
 
 /*function randomNumber*/
 function randomNumber(min, max){
@@ -24,6 +35,7 @@ function play(){
     let numSquare;
     let bombsInField = 16;
     const bombsPosition = [];
+    let score;
 
 
     const playGround = document.getElementById('playGround');
@@ -52,8 +64,8 @@ function play(){
         square.className = 'cell';
         square.style.width = `calc(100% / ${squarePerline})`;
         square.style.height = `calc(100% / ${squarePerline})`;
-        square.innerHTML = `<span>${num}</span>`;
-        square.addEventListener('click', function() {
+        square.innerHTML = `<span class="invisble">${num}</span>`;
+        square.addEventListener('click', function choose() {
             square.classList.add('green'); // si può anche usare this al posto di square in questo caso
         })
         return square;
@@ -82,6 +94,55 @@ function play(){
         const bomb = randomNumber(1, numSquare);
         if(!bombsPosition.includes(bomb)){
             bombsPosition.push(bomb);
+        }
+    }
+    console.log(bombsPosition);
+
+    const MAX_ATTEMPT = numSquare - bombsInField;
+    console.log(MAX_ATTEMPT);
+
+    function choose(){
+        /*
+        se clicco la casella e il numero non corrisponde al numero della bomba(bombPosition)
+        divernta verde, altrimenti diventa rossa
+        */
+        const span = this.querySelector('span');
+        console.log(span);
+        const num = span.innerText;
+        console.log(num);
+        this.removeEventListener('click', choose);
+
+        if(!bombsPosition.includes(num)){
+            this.classList.add('green');
+            this.innerHTML = `<span class="visible">${num}</span>`;
+            score++;
+            console.log(score);
+
+            if(score === MAX_ATTEMPT){
+                endGame();
+            }
+        }    
+        else{
+            this.style.backgroundColor = 'red';
+            endGame();
+        }    
+    }
+
+    function endGame(){
+        console.log('endGame');
+
+        // prendo tutte le celle
+        const squares = document.getElementsByClassName('cell');
+        console.log(squares);
+        for(let i = 0; i < squares.i; i++){
+            squares[i].removeEventListener('click', scegli);
+            let num = i+1;
+            if(score === MAX_ATTEMPT){
+                console.log('You win the game');
+            }
+            else{
+                console.log('You lost the game');
+            }
         }
     }
 

@@ -1,3 +1,4 @@
+/*GENERAL*/
 *{
     margin: 0;
     padding: 0;
@@ -51,4 +52,20 @@ button:hover{
     color: rgb(30, 67, 152);
     background-color: white;
     font-weight: bold;
+}
+.invisible{
+    color: rgb(105, 255, 85);
+}
+
+.visible{
+    color: black;
+}
+
+/*COLORI PER INDICARE SE SEI SULLA GIUSTA STRADA O MENO*/
+.green{
+    background-color: darkgreen;
+}
+
+.red{
+    background-color: red;
 }
