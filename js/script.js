@@ -35,8 +35,9 @@ function play(){
     let numSquare;
     let bombsInField = 16;
     const bombsPosition = [];
-    let score;
+    let score = 0;
 
+    const finalResult = document.getElementById('result-game');
 
     const playGround = document.getElementById('playGround');
     playGround.innerHTML = '';
@@ -65,9 +66,7 @@ function play(){
         square.style.width = `calc(100% / ${squarePerline})`;
         square.style.height = `calc(100% / ${squarePerline})`;
         square.innerHTML = `<span class="invisble">${num}</span>`;
-        square.addEventListener('click', function choose() {
-            square.classList.add('green'); // si può anche usare this al posto di square in questo caso
-        })
+        square.addEventListener('click', choose );
         return square;
     }
 
@@ -111,40 +110,56 @@ function play(){
         const num = span.innerText;
         console.log(num);
         this.removeEventListener('click', choose);
-
-        if(!bombsPosition.includes(num)){
+        //
+        if( ! bombsPosition.includes(parseInt(num)) ){
             this.classList.add('green');
             this.innerHTML = `<span class="visible">${num}</span>`;
             score++;
             console.log(score);
 
-            if(score === MAX_ATTEMPT){
-                endGame();
+            if(score >= MAX_ATTEMPT){
+                endGame(false);
             }
         }    
         else{
             this.style.backgroundColor = 'red';
-            endGame();
+            endGame(true);
         }    
     }
 
-    function endGame(){
-        console.log('endGame');
+    // Cose succede se becchi o meno una bomba?
+    function endGame( stopGame ){
+        console.log('endGame -> stopGame = ' + stopGame);
 
-        // prendo tutte le celle
+        // Disabilita tutte le celle
         const squares = document.getElementsByClassName('cell');
-        console.log(squares);
-        for(let i = 0; i < squares.i; i++){
-            squares[i].removeEventListener('click', scegli);
-            let num = i+1;
-            if(score === MAX_ATTEMPT){
-                console.log('You win the game');
-            }
-            else{
-                console.log('You lost the game');
+        console.log('squares -> stopGame = ' + squares);
+        for(let i = 0; i < squares.length; i++){
+            squares[i].removeEventListener('click', choose);
+        }
+
+        // Cliccata la bomba(la casella diventa rossa), anche le altre bombe si colorano di rosso
+        for(let i = 0; i < squares.length; i++){
+            console.log('squares[i] =' + squares[i].innerHTML );
+            const span = squares[i].querySelector('span');
+            const num = span.innerText;
+            console.log('num=' + num);
+            if(  bombsPosition.includes(parseInt(num)) ){
+                squares[i].style.backgroundColor = 'red';
             }
         }
+
+        // Visualizza risultato 
+        if(score >= MAX_ATTEMPT){
+            console.log('You win the game');
+            finalResult.innerHTML = 'You win the game!';
+        }
+        else{
+            console.log('You lost the game');
+            finalResult.innerHTML = 'You lost the game... try again';
+        }
     }
+
 
     /*Richiamo la funzione drawgrid */
     drawGrid();
